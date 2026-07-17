@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: guessgame
+  cache:
+    cache-names: leaderboard
+    caffeine:
+      spec: maximumSize=100,expireAfterWrite=20s
+  datasource:
+    url: jdbc:postgresql://localhost:5432/guess_game
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+application:
+  security:
+    jwt:
+      # Base64 of a 256-bit key for HS256.
+      secret: VGVzdFNlY3JldEtleUZvck51bWJlckd1ZXNzaW5nR2FtZUFQSUJlbmQxMjM0NQ==
+      expiration-seconds: 86400
+logging:
+  level:
+    org.hibernate.SQL: debug
