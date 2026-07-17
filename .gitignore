@@ -1,67 +1,47 @@
-# Compiled class file
-*.class
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+*.iws
+*.iml
+*.ipr
+.vscode/
 
-# Log file
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs / crash dumps
 *.log
+hs_err_pid*
+replay_pid*
 
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
+# Archives
 *.zip
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
+# Java / Gradle (backend in /be)
+*.class
+be/.gradle/
+be/build/
+be/out/
+be/bin/
+be/.apt_generated
+be/.classpath
+be/.factorypath
+be/.project
+be/.settings/
+be/.springBeans
+be/.sts4-cache
+!be/gradle/wrapper/gradle-wrapper.jar
 
-*.env
-*.idea
-*.gradle
-*out
-
-*HELP.md
-*.gradle
-*build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-
-### VS Code ###
-.vscode/
+# Frontend (reserved for /fe)
+fe/node_modules/
+fe/dist/
+fe/build/
+fe/.next/
+fe/.nuxt/
+fe/.cache/
+fe/coverage/
