@@ -19,7 +19,7 @@ public class GameController {
 
     private final GameService gameService;
 
-    @PostMapping("/guesses")
+    @PostMapping("/guess")
     public GuessResponse guess(@AuthenticationPrincipal AuthenticatedUser authenticatedUser,
                                @Valid @RequestBody GuessRequest request) {
         return gameService.guess(authenticatedUser.userId(), request.guess());

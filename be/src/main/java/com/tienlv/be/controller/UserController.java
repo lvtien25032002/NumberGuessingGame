@@ -23,7 +23,7 @@ public class UserController {
         return userService.getMyProfile(authenticatedUser.userId());
     }
 
-    @PostMapping("/turns")
+    @PostMapping("/buy-turns")
     public BuyTurnsResponse buyTurns(@AuthenticationPrincipal AuthenticatedUser authenticatedUser) {
         return userService.buyTurns(authenticatedUser.userId());
     }
