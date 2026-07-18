@@ -37,6 +37,6 @@ vnp:
   return:
     url: http://localhost:8080/api/v1/payment/vnpay-callback
   tmn:
-    code: 6POCP1K0
+    code: 38756NEH
   hash:
-    secret: JXCKTBBCONHRXYGSXAOQENBBWVMYLWFR
+    secret: E4C6JS65NTPQ9KJSGK4LFAAVCRTI1FO0

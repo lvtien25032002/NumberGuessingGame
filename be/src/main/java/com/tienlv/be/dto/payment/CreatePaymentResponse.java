@@ -1,6 +1,6 @@
 package com.tienlv.be.dto.payment;
 
 public record CreatePaymentResponse(
-        String paymentUrl
+        String paymentUrl, String code, String message
 ) {
 }
