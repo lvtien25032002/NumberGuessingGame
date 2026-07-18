@@ -143,6 +143,7 @@ const AuthSection = memo(function AuthSection({
       const response = await api.post<LoginResponse>("/auth/login", loginForm);
       localStorage.setItem("token", response.data.token);
       await onLoginSuccess(response.data.token);
+      setLoginForm(defaultLoginForm);
     } catch (error) {
       setError(getErrorMessage(error, "Đăng nhập thất bại."));
     } finally {
@@ -185,7 +186,10 @@ const AuthSection = memo(function AuthSection({
             className="rounded border px-3 py-2 hover:bg-red-600 hover:shadow-lg transition-all duration-200"
             disabled={!token || authLoading}
             type="button"
-            onClick={onLogout}
+            onClick={() => {
+              onLogout();
+              setLoginForm(defaultLoginForm);
+            }}
           >
             Đăng xuất
           </button>
