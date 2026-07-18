@@ -20,7 +20,13 @@ Flyway sẽ tự tạo bảng `users` và index cần thiết.
 4. cd folder fe sau đó run cmd "npm run dev" để chạy UI
 
 ## PaymentInfo để mock VNPay
-<img width="619" height="123" alt="image" src="https://github.com/user-attachments/assets/97fc9048-8d0c-4a62-8d7d-12d89e3bdc2f" />
+| Tiêu đề | Thông tin chi tiết |
+| :--- | :--- |
+| **Ngân hàng** | NCB |
+| **Số thẻ** | 9704198526191432198 |
+| **Tên chủ thẻ** | NGUYEN VAN A |
+| **Ngày phát hành** | 07/15 |
+| **Mật khẩu OTP** | 123456 |
 
 ## API
 ### Public
