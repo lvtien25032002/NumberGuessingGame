@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
     turns INT NOT NULL DEFAULT 5,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+    );
 
-CREATE INDEX IF NOT EXISTS idx_users_score ON users(score DESC, id ASC);
+CREATE INDEX IF NOT EXISTS idx_users_score
+    ON users(score DESC, id ASC);

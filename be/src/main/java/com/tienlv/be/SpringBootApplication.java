@@ -2,6 +2,7 @@ package com.tienlv.be;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @org.springframework.boot.autoconfigure.SpringBootApplication
 @EnableCaching

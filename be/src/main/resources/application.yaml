@@ -25,6 +25,18 @@ application:
       # Base64 of a 256-bit key for HS256.
       secret: VGVzdFNlY3JldEtleUZvck51bWJlckd1ZXNzaW5nR2FtZUFQSUJlbmQxMjM0NQ==
       expiration-seconds: 86400
-logging:
-  level:
-    org.hibernate.SQL: debug
+#logging:
+#  level:
+#    org.hibernate.SQL: debug
+game:
+  win-rate: 5
+
+vnp:
+  pay:
+    url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+  return:
+    url: http://localhost:8080/api/v1/payment/vnpay-callback
+  tmn:
+    code: 6POCP1K0
+  hash:
+    secret: JXCKTBBCONHRXYGSXAOQENBBWVMYLWFR
