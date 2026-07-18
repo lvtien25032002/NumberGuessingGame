@@ -4,6 +4,7 @@ import api from "@/lib/api";
 import { getErrorMessage } from "@/lib/commomMessage";
 import {
   BuyTurnsResponse,
+  CreatePaymentResponse,
   GuessResponse,
   LeaderboardEntry,
   LoginPayload,
@@ -136,6 +137,14 @@ const AuthSection = memo(function AuthSection({
   const [loginForm, setLoginForm] = useState<LoginPayload>(defaultLoginForm);
   const [authLoading, setAuthLoading] = useState(false);
 
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const hasToken = mounted ? !!token : false;
+
   const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setAuthLoading(true);
@@ -198,7 +207,7 @@ const AuthSection = memo(function AuthSection({
       <p className="mt-2 text-sm">
         Trạng thái token:{" "}
         <span className={token ? "font-semibold text-green-700" : "font-semibold text-gray-500"}>
-          {token ? "Đã đăng nhập" : "Chưa đăng nhập"}
+          {hasToken ? "Đã đăng nhập" : "Chưa đăng nhập"}
         </span>
       </p>
     </section>
@@ -209,7 +218,6 @@ type GameplaySectionProps = {
   token: string | null;
   guessResult: GuessResponse | null;
   onGuessSuccess: (guessResponse: GuessResponse) => Promise<void>;
-  onBuyTurnsSuccess: (buyTurnsResponse: BuyTurnsResponse) => Promise<void>;
   setError: (text: string) => void;
 };
 
@@ -217,7 +225,6 @@ const GameplaySection = memo(function GameplaySection({
   token,
   guessResult,
   onGuessSuccess,
-  onBuyTurnsSuccess,
   setError,
 }: GameplaySectionProps) {
   const [guess, setGuess] = useState(1);
@@ -240,13 +247,12 @@ const GameplaySection = memo(function GameplaySection({
   const handleBuyTurns = async () => {
     setBuyTurnsLoading(true);
     try {
-      const response = await api.post<BuyTurnsResponse>("/users/me/buy-turns");
-      if (response.status === 200 && response.data.url) {
-        window.location.href = response.data.url;
+      const response = await api.post<CreatePaymentResponse>("/payment/create");
+      if (response.status === 200 && response.data.paymentUrl) {
+        window.location.href = response.data.paymentUrl;
       } else {
         setError(getErrorMessage(null, "Không thể khởi tạo link thanh toán!"));
       }
-      await onBuyTurnsSuccess(response.data);
     } catch (error) {
       setError(getErrorMessage(error, "Không thể mua thêm lượt."));
     } finally {
@@ -427,13 +433,7 @@ export default function Home() {
     [loadLeaderboard, loadMe, setSuccess],
   );
 
-  const handleBuyTurnsSuccess = useCallback(
-    async (buyTurnsResponse: BuyTurnsResponse) => {
-      setSuccess(`${buyTurnsResponse.message} (Lượt còn lại: ${buyTurnsResponse.remainingTurns})`);
-      await loadMe();
-    },
-    [loadMe, setSuccess],
-  );
+
 
   const handleLogout = useCallback(() => {
     localStorage.removeItem("token");
@@ -446,12 +446,28 @@ export default function Home() {
   useEffect(() => {
     const timerId = window.setTimeout(() => {
       void loadLeaderboard();
+      if (token) {
+        void loadMe();
+      }
+
+      // Check payment status from URL
+      if (typeof window !== "undefined") {
+        const urlParams = new URLSearchParams(window.location.search);
+        const paymentStatus = urlParams.get("payment");
+        if (paymentStatus === "success") {
+          setSuccess("Thanh toán thành công. Đã cập nhật số lượt của bạn.");
+          window.history.replaceState({}, document.title, window.location.pathname);
+        } else if (paymentStatus === "failed") {
+          setError("Thanh toán thất bại hoặc đã bị hủy.");
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+      }
     }, 0);
 
     return () => {
       window.clearTimeout(timerId);
     };
-  }, [loadLeaderboard]);
+  }, [loadLeaderboard, loadMe, token, setSuccess, setError]);
 
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-col gap-5 p-6">
@@ -463,13 +479,14 @@ export default function Home() {
         onLogout={handleLogout}
         setError={setError}
       />
-      <GameplaySection
-        token={token}
-        guessResult={guessResult}
-        onGuessSuccess={handleGuessSuccess}
-        onBuyTurnsSuccess={handleBuyTurnsSuccess}
-        setError={setError}
-      />
+      {token ? (
+        <GameplaySection
+          token={token}
+          guessResult={guessResult}
+          onGuessSuccess={handleGuessSuccess}
+          setError={setError}
+        />
+      ) : null}
 
       <section className="flex flex-row">
         <ProfileSection me={me} />
