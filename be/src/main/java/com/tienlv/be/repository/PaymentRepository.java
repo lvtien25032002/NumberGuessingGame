@@ -16,7 +16,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     @Query("""
         select p
         from Payment p
-        where p.orderId = :orderId
+        where p.id = :orderId
        """)
     Optional<Payment> findByOrderIdForUpdate(String orderId);
 

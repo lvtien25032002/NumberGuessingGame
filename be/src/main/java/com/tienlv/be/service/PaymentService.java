@@ -86,7 +86,7 @@ public class PaymentService {
         String orderType = "other";
         String locale = "vn";
         String currCode = "VND";
-        String txnRef = String.valueOf(System.currentTimeMillis());
+        String txnRef = String.valueOf(payment.getId());
         String orderInfo = "Thanh toan";
 
         long amount = payment.getAmount() * 100L;
@@ -150,6 +150,8 @@ public class PaymentService {
         }
 
         String orderId = request.getParameter("vnp_TxnRef");
+
+        System.out.println(orderId);
 
         Payment payment = paymentRepository
                 .findByOrderIdForUpdate(orderId)
