@@ -56,7 +56,7 @@ public class PaymentService {
         Payment payment = createPendingPayment(user);
         String paymentUrl =
                 buildPaymentUrl(payment, request);
-        return new CreatePaymentResponse(paymentUrl);
+        return new CreatePaymentResponse(paymentUrl, "00", "success");
     }
 
     private Payment createPendingPayment(User user) {
@@ -90,8 +90,10 @@ public class PaymentService {
         String orderInfo = "Thanh toan";
 
         long amount = payment.getAmount() * 100L;
+        Map<String, String> vnpParams = new HashMap<>();
 
-        String ipAddr = "127.0.0.1";
+
+        String ipAddr = VnpayConfig.getIpAddress(request);
 
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -101,7 +103,7 @@ public class PaymentService {
         calendar.add(Calendar.MINUTE, 15);
         String expireDate = formatter.format(calendar.getTime());
 
-        Map<String, String> vnpParams = new HashMap<>();
+
 
         vnpParams.put("vnp_Version", vnpVersion);
         vnpParams.put("vnp_Command", vnpCommand);
@@ -121,28 +123,23 @@ public class PaymentService {
         Collections.sort(fieldNames);
 
         StringBuilder query = new StringBuilder();
-
-        Iterator<String> itr = fieldNames.iterator();
-
-        while (itr.hasNext()) {
-            String fieldName = itr.next();
+        for (String fieldName : fieldNames) {
             String fieldValue = vnpParams.get(fieldName);
-            query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII))
-                    .append("=")
-                 .append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII));
-            if (itr.hasNext()) {
-                query.append('&');
+            if (fieldValue != null && !fieldValue.isEmpty()) {
+                if (query.length() > 0) {
+                    query.append("&");
+                }
+                query.append(URLEncoder.encode(fieldName, StandardCharsets.UTF_8.toString()))
+                     .append("=")
+                     .append(URLEncoder.encode(fieldValue, StandardCharsets.UTF_8.toString()));
             }
         }
-        String secureHash =
-                VnpayConfig.hashAllFields(
-                        vnpParams,
-                        vnpHashSecret);
+        
+        String secureHash = VnpayConfig.hashAllFields(vnpParams, vnpHashSecret);
 
         // Thêm SecureHash vào cuối URL
         query.append("&vnp_SecureHash=");
         query.append(secureHash);
-        System.out.println(vnpPayUrl + "?" + query);
         return vnpPayUrl + "?" + query;
     }
 
